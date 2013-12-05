@@ -4,11 +4,15 @@ COLORS = {
     :reset  => "\e[0m",
     :green  => "\e[32m",
     :yellow => "\e[33m",
+    :red    => "\e[31m",
     :cyan   => "\e[36m"
 }
 
+puts "BTC-E :: Account Total Value\n\n"
+
 sum  = 0
 info = Btce::TradeAPI.new_from_keyfile.get_info
+open_orders = info['return']['open_orders']
 
 my_currencies = info['return']['funds'].select { |currency, amount| amount > 0 }
 
@@ -32,4 +36,6 @@ my_currencies.each do |currency, amount|
   end
 end
 
-puts "\n#{COLORS[:cyan]}#{sum.round(2)}#{COLORS[:yellow]}$#{COLORS[:reset]}"
+puts "\n#{COLORS[:red]}You have #{open_orders} open orders!" if open_orders > 0
+
+puts "\n#{COLORS[:cyan]}#{sum.round(2)}#{COLORS[:yellow]}$#{COLORS[:reset]}\n\n"
