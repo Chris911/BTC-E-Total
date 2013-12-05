@@ -12,6 +12,13 @@ puts "BTC-E :: Account Total Value\n\n"
 
 sum  = 0
 info = Btce::TradeAPI.new_from_keyfile.get_info
+
+# Error check
+if info['success'] == 0
+  puts "#{COLORS[:red]}#{info['error'].capitalize}#{COLORS[:reset]}"
+  exit
+end
+
 open_orders = info['return']['open_orders']
 
 my_currencies = info['return']['funds'].select { |currency, amount| amount > 0 }
