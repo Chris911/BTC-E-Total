@@ -2,8 +2,9 @@ require 'btce'
 
 COLORS = {
     :reset  => "\e[0m",
-    :green  => "\e[32 m",
-    :yellow => "\e[33m"
+    :green  => "\e[32m",
+    :yellow => "\e[33m",
+    :cyan   => "\e[36m"
 }
 
 sum  = 0
@@ -12,9 +13,9 @@ info = Btce::TradeAPI.new_from_keyfile.get_info
 my_currencies = info['return']['funds'].select { |currency, amount| amount > 0 }
 
 my_currencies.each do |currency, amount|
-  puts "#{COLORS[:yellow]}#{currency} : #{COLORS[:green]}#{amount}"
   if currency == "usd"
     sum += amount
+    puts "#{COLORS[:yellow]}#{currency} : #{COLORS[:cyan]}#{amount}"
   else
     if Btce::API::CURRENCY_PAIRS.include? "#{currency}_usd"
       ticker = Btce::Ticker.new "#{currency}_usd"
@@ -25,7 +26,8 @@ my_currencies.each do |currency, amount|
       usd_price  = ticker.last * ticker_btc.last
       sum += (usd_price * amount)
     end
+    printf "#{COLORS[:yellow]}%s : #{COLORS[:green]}%-13s #{COLORS[:cyan]} @ %s\n", currency, amount, ticker.last
   end
 end
 
-puts "\n#{COLORS[:green]}#{sum}#{COLORS[:yellow]}$#{COLORS[:reset]}"
+puts "\n#{COLORS[:cyan]}#{sum.round(2)}#{COLORS[:yellow]}$#{COLORS[:reset]}"
