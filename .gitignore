@@ -19,3 +19,6 @@ doc/
 
 # Private file
 btce-api-key.yml
+
+# Rubymine
+.idea/
