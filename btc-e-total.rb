@@ -23,7 +23,7 @@ my_currencies.each do |currency, amount|
       ticker     = Btce::Ticker.new "#{currency}_btc"
       ticker_btc = Btce::Ticker.new "btc_usd"
       usd_price  = ticker.last * ticker_btc.last
-      sum        += (usd_price * amount)
+      sum += (usd_price * amount)
     end
   end
 end
