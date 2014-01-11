@@ -10,8 +10,12 @@ COLORS = {
 
 puts "BTC-E :: Account Total Value\n\n"
 
-sum  = 0
-info = Btce::TradeAPI.new_from_keyfile.get_info
+begin
+  info = Btce::TradeAPI.new_from_keyfile.get_info
+rescue SocketError
+  puts "#{COLORS[:red]}No Internet connection found.\n#{COLORS[:reset]}"
+  exit
+end
 
 # Error check
 if info['success'] == 0
@@ -20,9 +24,9 @@ if info['success'] == 0
 end
 
 open_orders = info['return']['open_orders']
-
 my_currencies = info['return']['funds'].select { |currency, amount| amount > 0 }
 
+sum  = 0
 my_currencies.each do |currency, amount|
   if currency == "usd"
     sum += amount
